@@ -1,0 +1,81 @@
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+
+-- GUI Elements
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local ChatBox = Instance.new("TextBox")
+local SendButton = Instance.new("TextButton")
+local ChatLog = Instance.new("ScrollingFrame")
+local UICorner = Instance.new("UICorner")
+local UIListLayout = Instance.new("UIListLayout")
+
+-- Properties
+ScreenGui.Parent = game.CoreGui
+ScreenGui.Name = "ChatWithUser"
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
+MainFrame.Size = UDim2.new(0, 400, 0, 300)
+MainFrame.Draggable = true
+MainFrame.Active = true
+
+UICorner.CornerRadius = UDim.new(0, 12)
+UICorner.Parent = MainFrame
+
+ChatBox.Name = "ChatBox"
+ChatBox.Parent = MainFrame
+ChatBox.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+ChatBox.Position = UDim2.new(0.05, 0, 0.1, 0)
+ChatBox.Size = UDim2.new(0.7, 0, 0.1, 0)
+ChatBox.Font = Enum.Font.SourceSans
+ChatBox.PlaceholderText = "Type your message..."
+ChatBox.Text = ""
+ChatBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+ChatBox.TextSize = 18
+
+SendButton.Name = "SendButton"
+SendButton.Parent = MainFrame
+SendButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+SendButton.Position = UDim2.new(0.8, 0, 0.1, 0)
+SendButton.Size = UDim2.new(0.15, 0, 0.1, 0)
+SendButton.Font = Enum.Font.SourceSans
+SendButton.Text = "Send"
+SendButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+SendButton.TextSize = 18
+
+ChatLog.Name = "ChatLog"
+ChatLog.Parent = MainFrame
+ChatLog.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+ChatLog.Position = UDim2.new(0.05, 0, 0.25, 0)
+ChatLog.Size = UDim2.new(0.9, 0, 0.6, 0)
+ChatLog.CanvasSize = UDim2.new(0, 0, 0, 0)
+ChatLog.ScrollBarThickness = 5
+
+UIListLayout.Parent = ChatLog
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+UICorner:Clone().Parent = ChatBox
+UICorner:Clone().Parent = SendButton
+UICorner:Clone().Parent = ChatLog
+
+-- Functions
+local function sendMessageToUser(message, recipient)
+    local recipientPlayer = Players:GetPlayerByUserId(recipient)
+    if recipientPlayer then
+        recipientPlayer:Kick("You've been kicked from the server for safety reasons.")
+        -- Burada mesajı alıcıya göndermek için bir yöntem kullanabilirsiniz.
+    else
+        warn("Recipient is not online.")
+    end
+end
+
+SendButton.MouseButton1Click:Connect(function()
+    local message = ChatBox.Text
+    if message ~= "" then
+        local recipient = game.CreatorId
+        sendMessageToUser(message, recipient)
+    end
+end)
